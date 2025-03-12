@@ -1,10 +1,10 @@
 
 function import_data
 
-data = readtable ("sleep_cycle_productivity.csv");
+data = readtable ("MAT_example_csv - Attention.csv");
 
-x = data{:, 13}; 
-y = data{:, 15}; 
+x = data{:, :}; 
+y = data{:, :}; 
 
 b = zeros(1,10);
 
