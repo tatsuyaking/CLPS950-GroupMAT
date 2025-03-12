@@ -2,7 +2,7 @@
 data = readtable ("sleep_cycle_productivity.csv");
 
 x = data{:, 13};  % Column 2 as the x-axis data
-y = data{:, 15};  % Column 3 as the y-axis data
+y = data{:, 8};  % Column 3 as the y-axis data
 
 b = [0 0 0 0 0 0 0 0 0 0];
 
