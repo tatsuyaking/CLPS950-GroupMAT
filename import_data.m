@@ -1,10 +1,12 @@
 
+function import_data
+
 data = readtable ("sleep_cycle_productivity.csv");
 
-x = data{:, 13};  % Column 2 as the x-axis data
-y = data{:, 15};  % Column 3 as the y-axis data
+x = data{:, 13}; 
+y = data{:, 15}; 
 
-b = [0 0 0 0 0 0 0 0 0 0];
+b = zeros(1,10);
 
 
 for a = 1:10
@@ -14,3 +16,4 @@ end
 
 disp(b)
 
+end
