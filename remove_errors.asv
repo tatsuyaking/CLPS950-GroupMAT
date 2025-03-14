@@ -32,8 +32,6 @@
                    
             rowsToKeep = clean_data{:, 3} == 1; 
             updated_clean_data = clean_data(rowsToKeep, :);  
-            var_name = ['clean_participant_' num2str(id)]; 
-            assignin('base', var_name, updated_clean_data);  
 
         else
             updated_clean_data = [];  % If 'usable' is 0, return an empty table
@@ -42,8 +40,7 @@
         end
 
            
-
-
+        
 
     
 
