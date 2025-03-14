@@ -1,0 +1,10 @@
+prompt1 = {'What is the participant ID#?'};
+title1 = 'Participant ID#';
+dims1 = [1 50]; % [height, width]
+answer1 = inputdlg(prompt1, title1, dims1);
+
+
+prompt2 = {'How many hours of sleep did you get last night? Please enter a single or double digit number as a response, eg. "8".'};
+title2 = 'Question 1/3';
+dims2 = [1 50]; % [height, width]
+answer2 = inputdlg(prompt, title, dims);
