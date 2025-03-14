@@ -20,3 +20,25 @@ end
 
 end
 
+%%
+
+function remove_failure(id) 
+
+    numRows = size(matrix, 1);
+
+    if numRows == 0 || size(matrix, 2) < 3
+        error('Matrix must have at least 3 columns and at least 1 row.');
+    end
+
+    success = matrix(:, 3);
+
+    success_count = sum(success == 1);
+
+    % Check if more than 50% of the values in column 3 are 1
+    if countOnes > numRows / 2
+        usable = 1;
+    else
+        usable = 0;
+    end
+
+end
