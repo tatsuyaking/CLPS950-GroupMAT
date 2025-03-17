@@ -1,12 +1,15 @@
 
 
-    for id = 1:5
 
+    
+    avg_table = table();
+
+    for id = 1:100
         
         clean_data = eval("participant_"+num2str(id));
     
         if istable(clean_data)
-            success = clean_data{:, 3};  % Use curly braces to extract the third column as a numeric array
+            success = clean_data{:, 3}; 
         else
             error('Input must be a table.');
         end
@@ -35,18 +38,20 @@
             var_name = ['clean_participant_' num2str(id)]; 
             assignin('base', var_name, updated_clean_data);  
 
+            % Calculate the average of column 4 for the updated data
+            if size(updated_clean_data, 2) >= 4
+                avg_value = mean(updated_clean_data{:, 4});  % Calculate the average of column 4
+            else
+                avg_value = NaN;  % If column 4 doesn't exist, return NaN
+            end
+    
+            % Add the participant ID and average to the avg_table
+            avg_table = [avg_table; table(id, avg_value, 'VariableNames', {'ParticipantID', 'reaction_times'})];
+
         else
             updated_clean_data = [];  % If 'usable' is 0, return an empty table
-       
-
+      
         end
-
-           
-
-
-
-    
-
 
     end
 
