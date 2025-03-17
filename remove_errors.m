@@ -30,7 +30,7 @@
             usable = 0;
         end
 
-        if usable == 1
+        if usable == 1 
 
                    
             rowsToKeep = clean_data{:, 3} == 1; 
@@ -47,6 +47,10 @@
     
             % Add the participant ID and average to the avg_table
             avg_table = [avg_table; table(id, avg_value, 'VariableNames', {'ParticipantID', 'reaction_times'})];
+
+
+        elseif usable == 0
+            avg_table = [avg_table; table(id, 0, 'VariableNames', {'ParticipantID', 'reaction_times'})];
 
         else
             updated_clean_data = [];  % If 'usable' is 0, return an empty table
