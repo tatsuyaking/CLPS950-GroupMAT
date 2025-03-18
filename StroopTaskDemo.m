@@ -1,3 +1,9 @@
+
+%----------------------------------------------------------------------
+%               Setup--this code comes from the Matlab demo and
+%               allows for our program to run on any size screen
+%----------------------------------------------------------------------
+
 % Clear the workspace
 Screen('Preference', 'SkipSyncTests', 1);
 close all;
@@ -31,7 +37,7 @@ ifi = Screen('GetFlipInterval', window);
 % Set the text size
 Screen('TextSize', window, 60);
 
-% Get the centre coordinate of the window
+% Get the center coordinate of the window
 [xCenter, yCenter] = RectCenter(windowRect);
 
 % Set the blend funciton for the screen
@@ -41,9 +47,18 @@ Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 topPriorityLevel = MaxPriority(window);
 Priority(topPriorityLevel);
 
+% We'll use this information to format text on the screen
+
+% Get the screen size
+[screenXpixels, screenYpixels] = Screen('WindowSize', window);
+
+% Calculate the vertical position halfway between the center and bottom
+centerY = screenYpixels / 2;
+halfwayY = centerY + (screenYpixels / 4); % Adjust this value for positioning
+
 
 %----------------------------------------------------------------------
-%                       Timing Information
+%                       Timing Information--this code 
 %----------------------------------------------------------------------
 
 % Interstimulus interval time in seconds and frames
@@ -55,7 +70,9 @@ waitframes = 1;
 
 
 %----------------------------------------------------------------------
-%                       Keyboard information
+%            Keyboard information---left key corresponds with
+%   "red," down key corresponds with "green," right key corresponds with
+%   "blue"
 %----------------------------------------------------------------------
 
 % Define the keyboard keys that are listened for. We will be using the left
@@ -68,10 +85,11 @@ downKey = KbName('DownArrow');
 
 
 %----------------------------------------------------------------------
-%                     Colors in words and RGB
+%            Colors in words and RGB--we continued with the demo's
+%           three colors since we appreciated  
 %----------------------------------------------------------------------
 
-% We are going to use three colors for this demo. Red, Green and blue.
+%  We are going to use three colors for this demo. Red, Green and blue.
 wordList = {'Red', 'Green', 'Blue'};
 rgbColors = [1 0 0; 0 1 0; 0 0 1];
 
@@ -97,7 +115,7 @@ condMatrixShuffled = condMatrix(:, shuffler);
 %                     Make a response matrix
 %----------------------------------------------------------------------
 
-% This is a four row matrix the first row will record the word we present,
+% This is a four row matrix the first row will record the word presented,
 % the second row the color the word it written in, the third row the key
 % they respond with and the final row the time they took to make there response.
 respMat = nan(5, numTrials);
@@ -108,6 +126,7 @@ respMat = nan(5, numTrials);
 %----------------------------------------------------------------------
 
 % Animation loop: we loop for the total number of trials
+
 for trial = 1:numTrials
 
     % Word and color number
@@ -121,12 +140,16 @@ for trial = 1:numTrials
     % Cue to determine whether a response has been made
     respToBeMade = true;
 
+    
     % If this is the first trial we present a start screen and wait for a
     % key-press
     if trial == 1
-        DrawFormattedText(window, 'Name the color \n\n Press Any Key To Begin',...
+        DrawFormattedText(window, 'Welcome to the stroop task! \n\n Click the arrow that corresponds with the color of the text (NOT the word written!).',...
             'center', 'center', black);
+        DrawFormattedText(window, 'Click the LEFT arrow if color shown is RED, DOWN for GREEN, and RIGHT for BLUE! \n\n Press Any Key To Begin',...
+            'center', halfwayY, black);
         Screen('Flip', window);
+
         KbStrokeWait;
     end
 
@@ -205,9 +228,22 @@ for trial = 1:numTrials
     respMat(2, trial) = colorNum;
     respMat(3, trial) = response;
     respMat(4, trial) = rt;
-    respMat(5, trial) = isiRecDuration;
+    %respMat(5, trial) = isiRecDuration;
+    
 
 end
+
+for ii = 1:9
+    if respMat(2, ii) == respMat(3, ii)
+        respMat(5, ii) = 1;
+    else
+        respMat(5, ii) = 0;
+    end
+end
+disp(respMat)
+disp(respMat')
+% Export the matrix to a CSV file
+writematrix(respMat', 'matrix_data.csv');
 
 % End of experiment screen. We clear the screen once they have made their
 % response
@@ -216,6 +252,3 @@ DrawFormattedText(window, 'Experiment Finished \n\n Press Any Key To Exit',...
 Screen('Flip', window);
 KbStrokeWait;
 sca;
-
-%need to save the trial number and the response key ("left"), and save as
-%csv or mat file
