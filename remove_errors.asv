@@ -51,12 +51,10 @@
 
         elseif usable == 0 % If the data is not usable, we don't want to calculate averages for it, so we just add 0
             avg_table = [avg_table; table(id, 0, 'VariableNames', {'ParticipantID', 'reaction_times'})];
-            % The number of rows should still be the same, so that it is
-            % easier to combine later, which is why we don't just not
-            % include the data
 
         else
-            updated_clean_data = [];  
+            updated_clean_data = [];  % If 'usable' is 0, return an empty table
+      
         end
 
     end
