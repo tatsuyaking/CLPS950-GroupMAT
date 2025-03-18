@@ -32,5 +32,5 @@ participant_IDs = unique(data.participant_ID); %everything up until this point i
         success_rate_table.participant_ID(i) = current_ID;
         success_rate_table.success_rate(i) = success_rate;
     end
-    assignin('base', 'success_rate_table', success_rate_table); % Add to workspace
+    assignin('base', 'success_rate_table', success_rate_table);
 end
