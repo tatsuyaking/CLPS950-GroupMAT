@@ -234,23 +234,7 @@ for trial = 1:numTrials
         % Draw the word
         DrawFormattedText(window, char(theWord), 'center', 'center', theColor);
 
-        % Display the keyboard instructions along with trials
-
-        % Draw the image halfway below the center
-    
-        [imgWidth, imgHeight, ~] = size(img);  % Get image dimensions
-
-        % Scale the width by 6 times and cut height in half
-        imgWidth = imgWidth * 6;  % Want to stretch out image to make more readable
-        imgHeight = imgHeight / 2;  % Shrink the height by half
-
-        % this positions images horizontally centered and vertically above
-        % the center
-        imageX = xCenter - imgWidth / 2;  % Center the image horizontally
-        imageY = halfwayUpY + (4*imgHeight);  % Position the image halfway above the center
-    
-        % Draw the image texture at the calculated position
-        Screen('DrawTexture', window, imageTexture, [], [imageX, imageY, imageX + imgWidth, imageY + imgHeight]);
+        % asdf
 
         % Check the keyboard. The person should press the
         [keyIsDown,secs, keyCode] = KbCheck;
