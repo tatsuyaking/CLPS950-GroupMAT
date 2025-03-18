@@ -54,11 +54,28 @@ Priority(topPriorityLevel);
 
 % Calculate the vertical position halfway between the center and bottom
 centerY = screenYpixels / 2;
-halfwayY = centerY + (screenYpixels / 4); % Adjust this value for positioning
+halfwayDownY = centerY + (screenYpixels / 4); % Adjust this value for positioning
+halfwayUpY = centerY - (screenYpixels / 4);
+
+%---------------------------------------------------------------------- 
+%                            Adding images
+%----------------------------------------------------------------------
+
+imageFile = 'keyboard.jpg';  % Specify the path to your JPEG file
+
+if exist(imageFile, 'file')
+    img = imread(imageFile);  % Read the image
+else
+    error('Image file not found: %s', imageFile);
+end
+
+% Convert the image to texture
+imageTexture = Screen('MakeTexture', window, img); 
 
 
 %----------------------------------------------------------------------
-%                       Timing Information--this code 
+%                       Timing Information--helps us capture time
+%               information for reaction time 
 %----------------------------------------------------------------------
 
 % Interstimulus interval time in seconds and frames
@@ -115,9 +132,10 @@ condMatrixShuffled = condMatrix(:, shuffler);
 %                     Make a response matrix
 %----------------------------------------------------------------------
 
-% This is a four row matrix the first row will record the word presented,
+% This is a five row matrix the first row will record the word presented,
 % the second row the color the word it written in, the third row the key
-% they respond with and the final row the time they took to make there response.
+% they respond with, the fourth row the time they took to make a response
+% and in the final row if they were sucessful.
 respMat = nan(5, numTrials);
 
 
@@ -144,12 +162,30 @@ for trial = 1:numTrials
     % If this is the first trial we present a start screen and wait for a
     % key-press
     if trial == 1
+        
         DrawFormattedText(window, 'Welcome to the stroop task! \n\n Click the arrow that corresponds with the color of the text (NOT the word written!).',...
             'center', 'center', black);
         DrawFormattedText(window, 'Click the LEFT arrow if color shown is RED, DOWN for GREEN, and RIGHT for BLUE! \n\n Press Any Key To Begin',...
-            'center', halfwayY, black);
-        Screen('Flip', window);
+            'center', halfwayDownY, black);
+   
+        % Draw the image halfway above the center
+    
+        [imgWidth, imgHeight, ~] = size(img);  % Get image dimensions
 
+        % Scale the width by 8 times
+        imgWidth = imgWidth * 8;  % Want to stretch out image to make more readable
+
+        % this positions images horizontally centered and vertically above
+        % the center
+        imageX = xCenter - imgWidth / 2;  % Center the image horizontally
+        imageY = halfwayUpY - imgHeight / 2;  % Position the image halfway above the center
+    
+        % Draw the image texture at the calculated position
+        Screen('DrawTexture', window, imageTexture, [], [imageX, imageY, imageX + imgWidth, imageY + imgHeight]);
+
+        % Flip the screen to display everything
+        Screen('Flip', window);
+        
         KbStrokeWait;
     end
 
@@ -228,7 +264,13 @@ for trial = 1:numTrials
     respMat(2, trial) = colorNum;
     respMat(3, trial) = response;
     respMat(4, trial) = rt;
-    %respMat(5, trial) = isiRecDuration;
+
+    % we don't use isiRecDuration (actual time between
+    % fixation point and the start of next stimulus) in our demo but we
+    % decided to keep it in since it would be easy to add it to the output
+    % matrix if one were to use it in futher work
+
+    % respMat(5, trial) = isiRecDuration;
     
 
 end
