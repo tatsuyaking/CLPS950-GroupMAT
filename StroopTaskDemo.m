@@ -8,7 +8,7 @@
 Screen('Preference', 'SkipSyncTests', 1);
 close all;
 clear;
-sca;
+sca; 
 
 % Setup PTB with some default values
 PsychDefaultSetup(2);
@@ -61,7 +61,7 @@ halfwayUpY = centerY - (screenYpixels / 4);
 %                            Adding images
 %----------------------------------------------------------------------
 
-imageFile = 'keyboard.jpg';  % Specify the path to your JPEG file
+imageFile = 'keyboard.jpg';  % Specify the path to JPG file 
 
 if exist(imageFile, 'file')
     img = imread(imageFile);  % Read the image
@@ -132,11 +132,12 @@ condMatrixShuffled = condMatrix(:, shuffler);
 %                     Make a response matrix
 %----------------------------------------------------------------------
 
-% This is a five row matrix the first row will record the word presented,
-% the second row the color the word it written in, the third row the key
-% they respond with, the fourth row the time they took to make a response
-% and in the final row if they were sucessful.
-respMat = nan(5, numTrials);
+% This is a six row matrix the first row will record an ID for the subject,
+% the second row the word presented (1 = red, 2 = blue, 3 = green),
+% the third row the color the word it written in (same number-to-color key),
+% the fourth row the key they respond with, the fifth row the time they took
+% to make a response and in the final row 1 if they were sucessful and 0 if not.
+respMat = nan(6, numTrials);
 
 
 %----------------------------------------------------------------------
@@ -249,8 +250,15 @@ for trial = 1:numTrials
         imageX = xCenter - imgWidth / 2;  % Center the image horizontally
         imageY = halfwayUpY + (4*imgHeight);  % Position the image halfway above the center
     
+        % Convert the image to grayscale (black and white) for the
+        % experimental loop --see google doc for expanded reason for why I
+        % chose NOT to show color (essentially it makes the Stroop task too
+        % easy since subjects can just match color with the key below)
+        imgBW = rgb2gray(img);  % Convert the image to grayscale
+        imageTextureBW = Screen('MakeTexture', window, imgBW);  % Create texture for grayscale image
+
         % Draw the image texture at the calculated position
-        Screen('DrawTexture', window, imageTexture, [], [imageX, imageY, imageX + imgWidth, imageY + imgHeight]);
+        Screen('DrawTexture', window, imageTextureBW, [], [imageX, imageY, imageX + imgWidth, imageY + imgHeight]);
 
         % Check the keyboard. The person should press the
         [keyIsDown,secs, keyCode] = KbCheck;
@@ -278,31 +286,34 @@ for trial = 1:numTrials
     rt = vbl - iEnd;
 
     % Record the trial data into out data matrix
-    respMat(1, trial) = wordNum;
-    respMat(2, trial) = colorNum;
-    respMat(3, trial) = response;
-    respMat(4, trial) = rt;
+    respMat(1, trial) = 0;
+    respMat(2, trial) = wordNum;
+    respMat(3, trial) = colorNum;
+    respMat(4, trial) = response;
+    respMat(5, trial) = rt;
+    
 
     % we don't use isiRecDuration (actual time between
     % fixation point and the start of next stimulus) in our demo but we
     % decided to keep it in since it would be easy to add it to the output
     % matrix if one were to use it in futher work
 
-    % respMat(5, trial) = isiRecDuration;
+    % respMat(1 , trial) = isiRecDuration;
     
 
 end
 
 for ii = 1:9
-    if respMat(2, ii) == respMat(3, ii)
-        respMat(5, ii) = 1;
+    if respMat(3, ii) == respMat(4, ii)
+        respMat(6, ii) = 1;
     else
-        respMat(5, ii) = 0;
+        respMat(6, ii) = 0;
     end
 end
-disp(respMat)
-disp(respMat')
-% Export the matrix to a CSV file
+
+% Export the matrix to a CSV file -- flipping the columns and rows to make
+% file the correct format for our analysis
+
 writematrix(respMat', 'matrix_data.csv');
 
 % End of experiment screen. We clear the screen once they have made their
