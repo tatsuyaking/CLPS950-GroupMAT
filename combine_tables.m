@@ -1,12 +1,5 @@
 
-
-data = readtable ("MAT_example_csv - Survey.csv");
-
-disp(data)
-
-assignin('base', 'survey_table', data);
-
-table_combined = [survey_table, avg_table, success_rate_table]; % NOT WORKING RN
+table_combined = [survey_table avg_table(:,"reaction_times") success_rate_table(:,"success_rate")]; %combines tables, removes ID column from last two tables
 
 
 
