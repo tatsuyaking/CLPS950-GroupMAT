@@ -12,8 +12,8 @@ participant_IDs = unique(data.participant_ID); %everything up until this point i
     % Now we want to create a table with participant ID and success rate
     % for the Stroop task
     success_rate_table = table('Size', [length(participant_IDs), 2], ... %the number of rows is the number of participants, and there are 2 columns
-                               'VariableTypes', {'double', 'double'}, ...
-                               'VariableNames', {'participant_ID', 'success_rate'});
+                               'VariableTypes', {'double', 'double', 'double'}, ...
+                               'VariableNames', {'participant_ID', 'reaction_time_stroop', 'success_rate_stroop'});
     
     for i = 1:length(participant_IDs)
         current_ID = participant_IDs(i); % This is the same as before as well
@@ -22,15 +22,19 @@ participant_IDs = unique(data.participant_ID); %everything up until this point i
         participant_data = data(data.participant_ID == current_ID, :);
         
         % Get the 3rd column values (assuming it's a binary column with 0s and 1s for failure or success)
-        result = participant_data{:, 3};
+        result = participant_data{:, 6};
         
         % Calculate the percentage of 1s, multiply by 100 to make a
         % percentage
         success_rate = sum(result == 1) / length(result) * 100; 
+
+        %collects average reaction time
+        avg_reaction = mean(participant_data{:,5});
         
         % Store the participant ID and success rate in the new table
         success_rate_table.participant_ID(i) = current_ID;
-        success_rate_table.success_rate(i) = success_rate;
+        success_rate_table.reaction_time_stroop(i) = avg_reaction;
+        success_rate_table.success_rate_stroop(i) = success_rate;
     end
     assignin('base', 'success_rate_table', success_rate_table); % Add to workspace
 end

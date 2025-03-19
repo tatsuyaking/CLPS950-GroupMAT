@@ -21,5 +21,10 @@ for i = 1:length(participant_IDs)
     assignin('base', var_name, participant_data); % Saves new table 
 end
 
+data = readtable ("MAT_example_csv - Survey.csv");
+
+disp(data)
+
+assignin('base', 'survey_table', data);
 
 end

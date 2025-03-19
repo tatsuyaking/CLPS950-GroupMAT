@@ -1,8 +1,5 @@
 
 
-function creating_graph
+plot(table_combined, "sleep_hours", "success_rate");
 
-
-
-end 
 
