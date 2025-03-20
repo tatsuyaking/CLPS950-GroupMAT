@@ -4,13 +4,17 @@
 %               allows for our program to run on any size screen
 %----------------------------------------------------------------------
 
-currentID = 2;
+
 
 % Clear the workspace
 Screen('Preference', 'SkipSyncTests', 1);
-close all;
+close all
 clear;
 sca; 
+
+% Should be manually altered each run (future version could increment this
+% automatically
+currentID = 5;
 
 % Setup PTB with some default values
 PsychDefaultSetup(2);
@@ -54,13 +58,14 @@ Priority(topPriorityLevel);
 % Get the screen size
 [screenXpixels, screenYpixels] = Screen('WindowSize', window);
 
-% Calculate vertical position halfway between the center and bottom
+% Calculate vertical position halfway between the center and bottom of
+% screen
 centerY = screenYpixels / 2;
-halfwayDownY = centerY + (screenYpixels / 4); % Adjust this value for positioning
+halfwayDownY = centerY + (screenYpixels / 4);
 halfwayUpY = centerY - (screenYpixels / 4);
 
 %---------------------------------------------------------------------- 
-%                            Adding images
+%                            My added images
 %----------------------------------------------------------------------
 
 imageFile = 'keyboard.jpg';  % Specify the path to JPG file 
@@ -288,7 +293,7 @@ for trial = 1:numTrials
     rt = vbl - iEnd;
 
     % Record the trial data into out data matrix
-    respMat(1, trial) = 0;
+    respMat(1, trial) = currentID;
     respMat(2, trial) = wordNum;
     respMat(3, trial) = colorNum;
     respMat(4, trial) = response;
