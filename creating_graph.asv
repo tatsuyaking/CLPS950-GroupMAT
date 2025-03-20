@@ -11,15 +11,11 @@
 % Example data for demonstration
 x = 1:10;  % X-axis data for both plots
 y = rand(1, 10) * 10;  % Y-axis data for scatter plot
-
-variables = 'sleep_hours';
-
 bar_data = randi([1, 20], 1, 5);  % Random data for bar graph
 bar_labels = {1:9};  % Labels for bar graph
 
-
-fig = figure;
-
+% Create a figure with 2 subplots
+figure;
 
 % First subplot: Scatter plot with more details
 subplot(1, 2, 1);
@@ -32,10 +28,12 @@ set(gca, 'GridLineStyle', '--', 'GridAlpha', 0.7);
 %xlim([0, 11]); 
 %ylim([0, 10]);  
 
-
-%saving the figure into the workspace with the name being 'what variables
-%it looks at' + "_figure"
-variable_name = [variables, '_figure']; 
-variable_name = string(variable_name);
-assignin('base', variable_name, fig);
-
+% Bar graph, sleep - success rate
+subplot(1, 2, 2);
+bar(bar_data);  
+set(gca, 'XTickLabel', bar_labels, 'FontSize', 12);  
+title('Bar Graph: Categories', 'FontSize', 14, 'FontWeight', 'bold');  % Title
+xlabel('Category', 'FontSize', 12);  % X-axis label
+ylabel('Value', 'FontSize', 12);  % Y-axis label
+grid on;  % Add grid to bar graph
+set(gca, 'GridLineStyle', '--', 'GridAlpha', 0.7);  % Customize grid style
