@@ -54,13 +54,19 @@ failures = 0; % Incorrect space bar presses
 reactionTimes = []; % Store reaction times for correct responses
 
 % Initialize 'UserData' for Space press
-set(fig, 'UserData', false);
+spacePressed = false;
 
 % Key press callback function
-set(fig, 'KeyPressFcn', @(src, event) set(fig, 'UserData', strcmp(event.Key, 'space')));
+set(fig, 'KeyPressFcn', @(src, event) keyPressCallback(event));
+
+function keyPressCallback(event)
+    if strcmp(event.Key, 'space')
+        spacePressed = true;
+    end
+end
 
 for i = 1:numTrials
-    set(fig, 'UserData', false);
+    spacePressed = false;
 
     % Draw fixation cross (always visible)
     cla; % Clear previous drawings
@@ -73,9 +79,9 @@ for i = 1:numTrials
     startTime = tic;
         while toc(startTime) < randomInterval
             pause(0.01);
-            if get(fig, 'UserData')
+            if spacePressed
                 failures = failures + 1;
-                set(fig, 'UserData', false);
+                spacePressed = false;
             end
         end
 
@@ -85,18 +91,19 @@ for i = 1:numTrials
 
     % Start reaction timer
     circleStartTime = tic;
+    spacePressed = false;
 
     % Wait for space bar press or timeout
-        while toc(circleStartTime) < 0.4
-            pause(0.01); % Small pause to check for key press
-                if get(fig, 'UserData')
-                    reactionTime = toc(circleStartTime) * 1000;
-                    successes = successes + 1;
-                    reactionTimes = [reactionTimes, reactionTime];
-                    set(fig, 'UserData', false);
-                break;
-            end
+    while toc(circleStartTime) < 0.4
+        pause(0.01); % Small pause to check for key press
+        if spacePressed
+            reactionTime = toc(circleStartTime) * 1000;
+            successes = successes + 1;
+            reactionTimes = [reactionTimes, reactionTime];
+            spacePressed = false;
+            break;
         end
+    end
 
     pause(0.4 - toc(circleStartTime)); % Ensure the red circle is on for 0.5 sec total
 
