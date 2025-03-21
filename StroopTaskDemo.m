@@ -12,7 +12,7 @@ sca;
 
 % Should be manually altered each run (future version could increment this
 % automatically
-currentID = 6;
+currentID = 10;
 
 % Setup PTB with some default values
 PsychDefaultSetup(2);
