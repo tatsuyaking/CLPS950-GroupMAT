@@ -1,11 +1,11 @@
 function CVAT_task_summary
 
-data = readtable ("combined_stroop_data.csv");
+data = readtable ("CVAT_data.csv");
 
 disp(data)
 
 
-participant_IDs = unique(data.ParticipantID); %everything up until this point is the same as in the import_data script
+participant_IDs = unique(data.Var1); %everything up until this point is the same as in the import_data script
 
 
     % Now we want to create a table with participant ID and success rate
@@ -18,16 +18,16 @@ participant_IDs = unique(data.ParticipantID); %everything up until this point is
         current_ID = participant_IDs(i); % This is the same as before as well
         
         % Get the participant data 
-        participant_data = data(data.ParticipantID == current_ID, :);
+        participant_data = data(data.Var1 == current_ID, :);
                 
         
         % add total successes and failures, then divide that by number of
         % success 
-        success_rate = participant_data{i,2}/(participant_data{i,2} + participant_data{i,3}) * 100; 
+        success_rate = participant_data{:,2}/(participant_data{:,2} + participant_data{:,3}) * 100; 
 
         
         %storing average reaction -- right now just a placeholder
-        avg_reaction = participant_data{i,4};
+        avg_reaction = participant_data{:,4};
 
         
         %Store the participant ID and success rate in the new table
