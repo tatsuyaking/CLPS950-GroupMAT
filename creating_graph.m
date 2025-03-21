@@ -14,14 +14,10 @@ y = rand(1, 10) * 10;  % Y-axis data for scatter plot
 
 variables = 'sleep_hours';
 
-bar_data = randi([1, 20], 1, 5);  % Random data for bar graph
-bar_labels = {1:9};  % Labels for bar graph
-
-
 fig = figure;
 
 
-% First subplot: Scatter plot with more details
+% First subplot: Scatter plot
 subplot(1, 2, 1);
 scatter(x, y, 100, 'MarkerEdgeColor', 'black', 'MarkerFaceColor', [0.529, 0.808, 0.922]); 
 title('Sleep/Success', 'FontSize', 14, 'FontWeight', 'bold'); 
