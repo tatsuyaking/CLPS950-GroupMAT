@@ -5,7 +5,7 @@ combined_data = [];
 for i = 1:numFiles
     
     %all files follow the same naming convention
-    filename = sprintf('stroop_data%d.csv', i);
+    filename = sprintf('Stroop_Data_files/stroop_data%d.csv', i);
     
     %Import the data from the CSV file
     data = readtable(filename);
