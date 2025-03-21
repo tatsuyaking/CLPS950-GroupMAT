@@ -53,13 +53,15 @@ successes = 0; % Correct space bar presses
 failures = 0; % Incorrect space bar presses
 reactionTimes = []; % Store reaction times for correct responses
 
-% Initialize 'UserData' for Space press
-spacePressed = false;
+% Set key press function
+set(fig, 'KeyPressFcn', @keyPressCallback)
 
 % Key press callback function
-set(fig, 'KeyPressFcn', @(src, event) keyPressCallback(event));
-
-function keyPressCallback(event)
+function keyPressCallback(~, event)
+    persistent spacePressed;
+    if isempty(spacePressed)
+        spacePressed = false;
+    end
     if strcmp(event.Key, 'space')
         spacePressed = true;
     end
