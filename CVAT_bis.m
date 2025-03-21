@@ -28,7 +28,7 @@ end
 clc; close all;
 rng('shuffle'); % Ensure different random timings each time
 
-numTrials = 3; % Number of trials
+numTrials = 10; % Number of trials
 
 % Create a figure window (only once)
 fig = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
@@ -83,7 +83,7 @@ for i = 1:numTrials
     spacePressed = false; % Reset spacePressed
 
     % Wait for space bar press or timeout
-    while toc(circleStartTime) < 0.5
+    while toc(circleStartTime) < 0.4
         pause(0.01); % Small pause to check for key press
         if spacePressed
             reactionTime = toc(circleStartTime) * 1000;
@@ -94,7 +94,7 @@ for i = 1:numTrials
         end
     end
 
-    pause(0.5 - toc(circleStartTime)); % Ensure the red circle is on for 0.5 sec total
+    pause(0.4 - toc(circleStartTime)); % Ensure the red circle is on for 0.5 sec total
 
     % 3️⃣ Remove the red circle (but keep the cross)
     cla; % Clear figure again
@@ -105,7 +105,7 @@ for i = 1:numTrials
 end
 
 % Save data to the CSV file after the task
-    csvFileName = 'CVAT_participant_data.csv';
+    csvFileName = 'CVAT_data.csv';
     if exist(filename, 'file') == 2
         fid = fopen(filename, 'a'); % Append mode
     else
