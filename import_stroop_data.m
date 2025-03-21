@@ -1,12 +1,12 @@
 
 function import_stroop_data
 
-data = readtable ("mat_garbled.csv");
+data = readtable ("combined_stroop_data.csv");
 
 disp(data)
 
 
-participant_IDs = unique(data.participant_ID); %everything up until this point is the same as in the import_data script
+participant_IDs = unique(data.Var1); %everything up until this point is the same as in the import_data script
 
 
     % Now we want to create a table with participant ID and success rate
@@ -19,7 +19,7 @@ participant_IDs = unique(data.participant_ID); %everything up until this point i
         current_ID = participant_IDs(i); % This is the same as before as well
         
         % Get the participant data
-        participant_data = data(data.participant_ID == current_ID, :);
+        participant_data = data(data.Var1 == current_ID, :);
         
         % Get the 3rd column values (assuming it's a binary column with 0s and 1s for failure or success)
         result = participant_data{:, 6};

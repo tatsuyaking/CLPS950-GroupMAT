@@ -1,16 +1,15 @@
 
 
 %plot(table_combined, "sleep_hours", "success_rate");
-
-%x = table_combined ("sleep_hours");
-%y = table_combined ("success_rate");
+x = table_combined{:, 'sleep_hours'};  
+y = table_combined{:, 'success_rate_stroop'};
 
 %bar_labels = {1:9};  % Labels for bar graph
 
 
 % Example data for demonstration
-x = 1:10;  % X-axis data for both plots
-y = rand(1, 10) * 10;  % Y-axis data for scatter plot
+%x = 1:10;  % X-axis data for both plots
+%y = rand(1, 10) * 10;  % Y-axis data for scatter plot
 
 variables = 'sleep_hours';
 
