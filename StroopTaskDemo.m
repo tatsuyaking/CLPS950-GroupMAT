@@ -4,8 +4,6 @@
 %               allows for our program to run on any size screen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 % Clear the workspace
 Screen('Preference', 'SkipSyncTests', 1);
 close all
@@ -14,7 +12,7 @@ sca;
 
 % Should be manually altered each run (future version could increment this
 % automatically
-currentID = 6;
+currentID = 10;
 
 % Setup PTB with some default values
 PsychDefaultSetup(2);
@@ -65,7 +63,7 @@ halfwayDownY = centerY + (screenYpixels / 4);
 halfwayUpY = centerY - (screenYpixels / 4);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%                            Showing keyboard image
+%                            Showing the keyboard image
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 imageFile = 'keyboard.jpg';  % path to JPG file 
@@ -268,11 +266,14 @@ for trial = 1:numTrials
 
 end
 
-% 
+% Determines the sucessfulness of the trial by checking that the color key
+% pressed matches the color of the image (by seeing if the 3rd and 4th
+% columns matched)
 
-for ii = 1:9 
+for ii = 1:numTrials 
     if respMat(3, ii) == respMat(4, ii)
-        respMat(6, ii) = 1;
+        respMat(6, ii) = 1; % saves a 1 in the 6th column if response was
+                            % appropriate for the color of word shown
     else
         respMat(6, ii) = 0;
     end
@@ -285,13 +286,12 @@ fileName = ['Stroop_Data_files/stroop_data', num2str(currentID), '.csv'];
 
 
 
-% Export the matrix to a CSV file -- flipping the columns and rows to make
+% Exports the matrix to a CSV file -- flipping the columns and rows to make
 % file the correct format for our analysis
 
 writematrix(respMat', fileName);
 
-% End of experiment screen. We clear the screen once they have made their
-% response
+% Display the end experiment screen and clears screen once participant makes their response
 
 DrawFormattedText(window, 'Experiment Finished \n\n Press Any Key To Exit',...
     'center', 'center', black);

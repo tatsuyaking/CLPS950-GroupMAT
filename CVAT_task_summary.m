@@ -36,4 +36,18 @@ participant_IDs = unique(data.Var1); %everything up until this point is the same
         task_summary_table.avg_reaction_CVAT(i) = avg_reaction;
     end
     assignin('base', 'CVAT_summary_table', task_summary_table); % Add to workspace
+
+
+
+
+
+    data = readtable ("MAT_example_csv - Survey.csv");
+
+    disp(data)
+
+    assignin('base', 'survey_table', data);
+
+
+
+
 end
