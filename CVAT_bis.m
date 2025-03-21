@@ -53,18 +53,14 @@ successes = 0; % Correct space bar presses
 failures = 0; % Incorrect space bar presses
 reactionTimes = []; % Store reaction times for correct responses
 
-spacePressed = false;
-set(fig, 'KeyPressFcn', @(src, event) keyPressCallback(event));
+% Initialize 'UserData' for Space press
+set(fig, 'UserData', false);
 
-% Function to handle key press
-function keyPressCallback(event)
-    if strcmp(event.Key, 'space')
-        spacePressed = true;
-    end
-end
+% Key press callback function
+set(fig, 'KeyPressFcn', @(src, event) set(fig, 'UserData', strcmp(event.Key, 'space')));
 
 for i = 1:numTrials
-    spacePressed = false;
+    set(fig, 'UserData', false);
 
     % Draw fixation cross (always visible)
     cla; % Clear previous drawings
@@ -77,9 +73,9 @@ for i = 1:numTrials
     startTime = tic;
         while toc(startTime) < randomInterval
             pause(0.01);
-            if spacePressed
+            if get(fig, 'UserData')
                 failures = failures + 1;
-                spacePressed = false;
+                set(fig, 'UserData', false);
             end
         end
 
@@ -91,27 +87,24 @@ for i = 1:numTrials
     circleStartTime = tic;
 
     % Wait for space bar press or timeout
-        while toc(circleStartTime) < 0.3
+        while toc(circleStartTime) < 0.4
             pause(0.01); % Small pause to check for key press
-                if spacePressed
+                if get(fig, 'UserData')
                     reactionTime = toc(circleStartTime) * 1000;
                     successes = successes + 1;
                     reactionTimes = [reactionTimes, reactionTime];
-                    spacePressed = false;
+                    set(fig, 'UserData', false);
                 break;
             end
         end
 
-    pause(0.3 - toc(circleStartTime)); % Ensure the red circle is on for 0.5 sec total
+    pause(0.4 - toc(circleStartTime)); % Ensure the red circle is on for 0.5 sec total
 
     % 3️⃣ Remove the red circle (but keep the cross)
     cla; % Clear figure again
     plot([0 0], [-0.007 0.007], 'k', 'LineWidth', 2); % Vertical line
     plot([-0.007 0.007], [0 0], 'k', 'LineWidth', 2); % Horizontal line
     xlim([-0.2 0.2]); ylim([-0.2 0.2]);
-
-    set(fig, 'CurrentCharacter', ' ')
-
 end
 
 pause(1);
