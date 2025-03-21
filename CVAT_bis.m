@@ -5,19 +5,6 @@ if isempty(participantID)
     return;
 end
 
-% Save participant ID to a CSV file
-filename = 'CVAT_participant_data.csv';
-if exist(filename, 'file') == 2
-    fid = fopen(filename, 'a'); % Append mode
-else
-    fid = fopen(filename, 'w'); % Create new file
-    fprintf(fid, 'ParticipantID, Successes, Failures, ReactionTimes\n'); % Write header
-end
-fprintf(fid, '%s\n', participantID{1}); % Write participant ID
-fclose(fid);
-
-disp(['Participant ID saved: ' participantID{1}]);
-
 % Create a figure window for instructions
 fig = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
     'NumberTitle', 'off', 'Name', 'Instructions', 'Position', [300, 300, 1500, 1300]);
@@ -41,7 +28,7 @@ end
 clc; close all;
 rng('shuffle'); % Ensure different random timings each time
 
-numTrials = 3; % Number of trials
+numTrials = 10; % Number of trials
 
 % Create a figure window (only once)
 fig = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
@@ -53,22 +40,22 @@ successes = 0; % Correct space bar presses
 failures = 0; % Incorrect space bar presses
 reactionTimes = []; % Store reaction times for correct responses
 
+global spacePressed
+spacePressed = false; % Track space key press state
+
 % Set key press function
 set(fig, 'KeyPressFcn', @keyPressCallback)
 
 % Key press callback function
 function keyPressCallback(~, event)
-    persistent spacePressed;
-    if isempty(spacePressed)
-        spacePressed = false;
-    end
+global spacePressed
     if strcmp(event.Key, 'space')
         spacePressed = true;
     end
 end
 
 for i = 1:numTrials
-    spacePressed = false;
+    spacePressed = false; % Reset for each trial
 
     % Draw fixation cross (always visible)
     cla; % Clear previous drawings
@@ -93,7 +80,7 @@ for i = 1:numTrials
 
     % Start reaction timer
     circleStartTime = tic;
-    spacePressed = false;
+    spacePressed = false; % Reset spacePressed
 
     % Wait for space bar press or timeout
     while toc(circleStartTime) < 0.4
@@ -114,15 +101,23 @@ for i = 1:numTrials
     plot([0 0], [-0.007 0.007], 'k', 'LineWidth', 2); % Vertical line
     plot([-0.007 0.007], [0 0], 'k', 'LineWidth', 2); % Horizontal line
     xlim([-0.2 0.2]); ylim([-0.2 0.2]);
+
 end
+
+% Save data to the CSV file after the task
+    csvFileName = 'CVAT_data.csv';
+    if exist(filename, 'file') == 2
+        fid = fopen(filename, 'a'); % Append mode
+    else
+        fid = fopen(filename, 'w'); % Create new file
+        fprintf(fid, 'ParticipantID, Successes, Failures, ReactionTimes\n'); % Write header
+    end
+    fileID = fopen(csvFileName, 'a'); % Open file for appending
+    fprintf(fileID, '%s,%d,%d,%s\n', participantID{1}, successes, failures, mat2str(mean(reactionTimes)));
+    fclose(fileID);
 
 pause(1);
 close(fig); 
-
-csvFileName = 'CVAT_participant_data.csv';
-fileID = fopen(csvFileName, 'a'); % Open file for appending
-fprintf(fileID, '%s,%d,%d,%s\n', participantID{1}, successes, failures, mat2str(reactionTimes));
-fclose(fileID);
 
 % Show "Thank You" Message in a New Figure
 fig2 = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
@@ -141,7 +136,6 @@ while ~strcmp(get(fig2, 'CurrentCharacter'), ' ')
 end
 
 close(fig2);
-clc;
 
 
 
