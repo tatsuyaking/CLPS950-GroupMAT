@@ -5,7 +5,7 @@ data = readtable ("combined_stroop_data.csv");
 disp(data)
 
 
-participant_IDs = unique(data.Var1); %everything up until this point is the same as in the import_data script
+participant_IDs = unique(data.ParticipantID); %everything up until this point is the same as in the import_data script
 
 
     % Now we want to create a table with participant ID and success rate
@@ -18,7 +18,7 @@ participant_IDs = unique(data.Var1); %everything up until this point is the same
         current_ID = participant_IDs(i); % This is the same as before as well
         
         % Get the participant data 
-        participant_data = data(data.Var1 == current_ID, :);
+        participant_data = data(data.ParticipantID == current_ID, :);
                 
         
         % add total successes and failures, then divide that by number of
@@ -27,7 +27,7 @@ participant_IDs = unique(data.Var1); %everything up until this point is the same
 
         
         %storing average reaction -- right now just a placeholder
-        avg_reaction = 3;
+        avg_reaction = participant_data{i,4};
 
         
         %Store the participant ID and success rate in the new table
