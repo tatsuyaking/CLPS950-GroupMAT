@@ -42,7 +42,7 @@ end
 clc; clear; close all;
 rng('shuffle'); % Ensure different random timings each time
 
-numTrials = 2; % Number of trials
+numTrials = 3; % Number of trials
 
 % Create a figure window (only once)
 fig = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
@@ -71,24 +71,21 @@ for i = 1:numTrials
 
     % Start reaction timer
     tic;
-    circleStartTime = toc;
+    keyPressed = '';
+    set(fig, 'KeyPressFcn', @(src, event) assignin('base', 'keyPressed', event.Key));
 
     % Wait for space bar press or timeout
     elapsedTime = 0;
     while elapsedTime < 0.5
         pause(0.01); % Small pause to check for key press
-        elapsedTime = toc - circleStartTime;
+        elapsedTime = toc 
 
-        if get(gcf, 'CurrentCharacter') == ' ' % Space bar detected
-            reactionTime = elapsedTime * 1000; % Convert to ms
+        if strcmp(keyPressed, 'space') % Space bar pressed
+            reactionTimes = [reactionTimes; elapsedTime * 1000]; % Convert to ms
             successes = successes + 1;
-            reactionTimes = [reactionTimes; reactionTime]; % Store reaction time
-            break; % Exit loop when key is pressed
+            break;
         end
     end
-
-    % Clear key press buffer
-    set(fig, 'CurrentCharacter', ' ');
 
     pause(0.5 - elapsedTime); % Ensure the red circle is on for 0.5 sec total
 
@@ -99,14 +96,11 @@ for i = 1:numTrials
     xlim([-0.2 0.2]); ylim([-0.2 0.2]);
 end
 
-if get(gcf, 'CurrentCharacter') == ' ' % Space bar detected at wrong time
-    failures = failures + 1;
-end
+close(fig);
 
-csvFileName = 'participant_data.csv';
-fileID = fopen(csvFileName, 'a'); % Open file for appending
-fprintf(fileID, '%s,%d,%d,%s\n', participantID, successes, failures, mat2str(reactionTimes));
-fclose(fileID);
+% Show "Thank You" Message in a New Figure
+fig2 = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
+    'NumberTitle', 'off', 'Name', 'End of Experiment', 'Position', [300, 300, 1500, 1500]);
 
 uicontrol('Style', 'text', 'String', ...
     ['Thank you for participating in this experiment!' ...
@@ -122,16 +116,14 @@ end
 
 clc; clear; close all;
 
+if strcmp(keyPressed, 'space')
+    failures = failures + 1;
+end
 
-
-
-
-
-
-
-
-
-
+csvFileName = 'participant_data.csv';
+fileID = fopen(csvFileName, 'a'); % Open file for appending
+fprintf(fileID, '%s,%d,%d,%s\n', participantID, successes, failures, mat2str(reactionTimes));
+fclose(fileID);
 
 
 
