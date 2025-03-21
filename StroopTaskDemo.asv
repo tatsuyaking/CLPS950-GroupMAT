@@ -203,25 +203,13 @@ for trial = 1:numTrials
     % Get the presentation time of the ISI to help capture reaction time
     iEnd = vbl;
 
-    % Show word until person presses akey to respond. We take a time stamp before and after to calculate
-    % our reaction time. We could do this directly with the vbl time stamps,
-    % but for the purposes of this introductory demo we will use GetSecs.
-    %
-    % The person should be asked to respond to either the written word or
-    % the color the word is written in. They make thier response with the
-    % three arrow key. They should press "Left" for "Red", "Down" for
-    % "Green" and "Right" for "Blue".
-    %
-    % We could also use Keyboard Queues which offer a potentially more
-    % accurate way in which to get keyboard resoponses. See the Keyboiard
-    % Queue version of this demo.
-    %
-    % Additionally, we poll the keyboard each time we update the screen. We
-    % could alternatively flip to the screen once, then loop over purely
-    % the keyboard polling and clear the screen once a button is pressed.
+    % Show word until person presses a key to respond ("Left" for "Red",
+    % "Down" for "Green" and "Right" for "Blue"), taking time stamp before
+    % and after to calculate reaction time.
+
     while respToBeMade == true
 
-        % Draw the word
+        % Draw word
         DrawFormattedText(window, char(theWord), 'center', 'center', theColor);
 
         % Display the keyboard instructions along with trials
@@ -234,22 +222,20 @@ for trial = 1:numTrials
         imgWidth = imgWidth * 6;  % Want to stretch out image to make more readable
         imgHeight = imgHeight / 2;  % Shrink the height by half
 
-        % this positions images horizontally centered and vertically above
-        % the center
+        % Positions images horizontally centered and vertically above the center
         imageX = xCenter - imgWidth / 2;  % Center the image horizontally
         imageY = halfwayUpY + (4*imgHeight);  % Position the image halfway above the center
     
         % Convert the image to grayscale (black and white) for the
-        % experimental loop --see google doc for expanded reason for why I
-        % chose NOT to show color (essentially it makes the Stroop task too
-        % easy since subjects can just match color with the key below)
+        % experimental loop --essentially it makes the Stroop task too
+        % easy since subjects can just match color with the key below
         imgBW = rgb2gray(img);  % Convert the image to grayscale
         imageTextureBW = Screen('MakeTexture', window, imgBW);  % Create texture for grayscale image
 
         % Draw the image texture at the calculated position
         Screen('DrawTexture', window, imageTextureBW, [], [imageX, imageY, imageX + imgWidth, imageY + imgHeight]);
 
-        % Check the keyboard. The person should press the
+        % Saves keyboard response
         [keyIsDown,secs, keyCode] = KbCheck;
         if keyCode(escapeKey)
             ShowCursor;
@@ -266,27 +252,30 @@ for trial = 1:numTrials
             respToBeMade = false;
         end
 
-        % Flip to the screen
-        vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+        vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);  % flips the screen
 
     end
 
-    % Record the reaction time, calculated by the use of flip timestamps
+    % Records reaction time calculated by the use of flip timestamps
     rt = vbl - iEnd;
 
-    % Record the trial data into out data matrix
+    % Records trial data into out data matrix
     respMat(1, trial) = currentID;
     respMat(2, trial) = wordNum;
     respMat(3, trial) = colorNum;
     respMat(4, trial) = response;
-    respMat(5, trial) = rt;
-    
+    respMat(5, trial) = rt; 
 
 end
 
-for ii = 1:9 
+% Determines the sucessfulness of the trial by checking that the color key
+% pressed matches the color of the image (by seeing if the 3rd and 4th
+% columns matched)
+
+for ii = 1:numTrials 
     if respMat(3, ii) == respMat(4, ii)
-        respMat(6, ii) = 1;
+        respMat(6, ii) = 1; % saves a 1 in the 6th column if response was
+                            % appropriate for the color of word shown
     else
         respMat(6, ii) = 0;
     end
