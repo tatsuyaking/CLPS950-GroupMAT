@@ -4,7 +4,7 @@
 %               allows for our program to run on any size screen
 %----------------------------------------------------------------------
 
-%currentID = 2;
+currentID = 2;
 
 % Clear the workspace
 Screen('Preference', 'SkipSyncTests', 1);
@@ -54,13 +54,14 @@ Priority(topPriorityLevel);
 % Get the screen size
 [screenXpixels, screenYpixels] = Screen('WindowSize', window);
 
-% Calculate vertical position halfway between the center and bottom
+% Calculate vertical position halfway between the center and bottom of
+% screen
 centerY = screenYpixels / 2;
-halfwayDownY = centerY + (screenYpixels / 4); % Adjust this value for positioning
+halfwayDownY = centerY + (screenYpixels / 4);
 halfwayUpY = centerY - (screenYpixels / 4);
 
 %---------------------------------------------------------------------- 
-%                            Adding images
+%                            My added images
 %----------------------------------------------------------------------
 
 imageFile = 'keyboard.jpg';  % Specify the path to JPG file 
@@ -316,52 +317,7 @@ end
 
 % Creates a new csv file for each particpant ID
 
-%fileName = ['stroop_data', num2str(currentID), '.csv'];
-
-
-
-% Define the folder path to store the data
-folderPath = 'C:\Users\alexs\OneDrive\Documents\GitHub\CLPS950-GroupMAT';  % my folder path
-
-% Define the path to store the current ID (in the same folder as data)
-idFile = fullfile(folderPath, 'lastID.txt');
-
-% Check if the file exists and read the last used ID
-if exist(idFile, 'file')
-    lastID = load(idFile);  % Load the last used ID
-    currentID = lastID + 1;  % Increment for the new session
-else
-    currentID = 1;  % Start with 1 if no previous ID is found
-end
-
-% Save the new currentID for the next session
-save(idFile, 'currentID');
-
-% Create the file name using currentID and timestamp for uniqueness
-fileName = fullfile(folderPath, sprintf('stroop_data_%d_%s.csv', currentID, datestr(now, 'yyyymmdd_HHMMSS')));
-
-% Export the matrix to a CSV file
-writematrix(respMat', fileName);
-
-
-
-
-
-
-
-
-% Define the folder where the file will be saved
-folderPath = 'C:\Users\alexs\OneDrive\Documents\GitHub\CLPS950-GroupMAT';  % the path in Alex Sayette's cpu
-
-% Ensure the directory exists
-if ~exist(folderPath, 'dir')
-    mkdir(folderPath);  % Create the folder if it doesn't exist
-end
-
-% Create the file name using currentID
-fileName = fullfile(folderPath, sprintf('stroop_data%d.csv', currentID));
-
-
+fileName = ['stroop_data', num2str(currentID), '.csv'];
 
 
 
@@ -372,6 +328,7 @@ writematrix(respMat', fileName);
 
 % End of experiment screen. We clear the screen once they have made their
 % response
+
 DrawFormattedText(window, 'Experiment Finished \n\n Press Any Key To Exit',...
     'center', 'center', black);
 Screen('Flip', window);
