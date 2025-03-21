@@ -1,8 +1,8 @@
 
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %               Setup--this code comes from the Matlab demo and
 %               allows for our program to run on any size screen
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -14,7 +14,7 @@ sca;
 
 % Should be manually altered each run (future version could increment this
 % automatically
-currentID = 5;
+currentID = 6;
 
 % Setup PTB with some default values
 PsychDefaultSetup(2);
@@ -64,9 +64,9 @@ centerY = screenYpixels / 2;
 halfwayDownY = centerY + (screenYpixels / 4);
 halfwayUpY = centerY - (screenYpixels / 4);
 
-%---------------------------------------------------------------------- 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %                            My added images
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 imageFile = 'keyboard.jpg';  % Specify the path to JPG file 
 
@@ -80,10 +80,10 @@ end
 imageTexture = Screen('MakeTexture', window, img); 
 
 
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                       Timing Information--helps us capture time
 %               information for reaction time 
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Interstimulus interval time in seconds and frames
 isiTimeSecs = 1;
@@ -93,11 +93,11 @@ isiTimeFrames = round(isiTimeSecs / ifi);
 waitframes = 1;
 
 
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %            Keyboard information---left key corresponds with
 %   "red," down key corresponds with "green," right key corresponds with
 %   "blue"
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Define the keyboard keys that are listened for. We will be using the left
 % and right arrow keys as response keys for the task and the escape key as
@@ -108,10 +108,10 @@ rightKey = KbName('RightArrow');
 downKey = KbName('DownArrow');
 
 
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %            Colors in words and RGB--we continued with the demo's
 %           three colors since we appreciated  
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %  We are going to use three colors for this demo. Red, Green and blue.
 wordList = {'Red', 'Green', 'Blue'};
@@ -135,9 +135,9 @@ shuffler = Shuffle(1:numTrials);
 condMatrixShuffled = condMatrix(:, shuffler);
 
 
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                     Make a response matrix
-%----------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % This is a six row matrix the first row will record an ID for the subject,
 % the second row the word presented (1 = red, 2 = blue, 3 = green),
@@ -321,7 +321,7 @@ end
 
 % Creates a new csv file for each particpant ID
 
-fileName = ['stroop_data', num2str(currentID), '.csv'];
+fileName = ['Stroop_Data_files/stroop_data', num2str(currentID), '.csv'];
 
 
 
