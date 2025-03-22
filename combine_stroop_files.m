@@ -1,5 +1,5 @@
 
-numFiles = 10; %for 5 participants
+numFiles = 5; %for 5 participants
 combined_data = [];
 
 for i = 1:numFiles
