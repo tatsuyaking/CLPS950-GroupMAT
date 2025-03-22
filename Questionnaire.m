@@ -9,10 +9,6 @@ T = table(string(answers(1)), string(answers(2)), string(answers(3)), string(ans
 writetable(T, 'responses.csv');
 disp('Answers saved to "responses.csv"');
 
-% how about making it so that it creates a different .csv file everytime
-% that ends with the participant ID# and then add a function that
-% continuously adds each new .csv file to the older ones. That way we're
-% appending .csv files to each other rather than appending new data to an
-% existing file.
+
 
 
