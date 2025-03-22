@@ -1,15 +1,16 @@
+% Create a question pop-up to ask for participant ID
 participantID = inputdlg('Enter Participant ID:', 'Participant Info', [1 50]);
 
-% Check if the user canceled the input
+% Cancel the task if the participant doesn't provide an ID
 if isempty(participantID)
     return;
 end
 
-% Create a figure window for instructions
+% Open a new screen with the task instructions
 fig = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
     'NumberTitle', 'off', 'Name', 'Instructions', 'Position', [300, 300, 1500, 1300]);
 
-% Display instructions
+% Display the instructions
 uicontrol('Style', 'text', 'String', ...
     ['Welcome to this experiment!' ...
     ' You will see a black cross at the center of your screen.' ...
@@ -19,53 +20,54 @@ uicontrol('Style', 'text', 'String', ...
     'FontSize', 20, 'HorizontalAlignment', 'center', ...
     'BackgroundColor', 'w', 'Units', 'normalized', 'Position', [0.1 0.3 0.8 0.4]);
 
-% Wait for SPACE key press
+% Wait for SPACE key press to close the screen
 waitforbuttonpress;
 while ~strcmp(get(fig, 'CurrentCharacter'), ' ')
     waitforbuttonpress;
 end
 
-clc; close all;
+clc; close all; % close the screen and clear the command window
 rng('shuffle'); % Ensure different random timings each time
 
 numTrials = 10; % Number of trials
 
-% Create a figure window (only once)
+% Open a new screen on which the task will be displayed
 fig = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
     'NumberTitle', 'off', 'Name', 'Attention Task', 'Position', [300, 300, 1500, 1500]);
 hold on; axis off; axis equal; % Ensure correct proportions
 
-% Data storage
+% Initializing the variables for the final data output
 successes = 0; % Correct space bar presses
 failures = 0; % Incorrect space bar presses
 reactionTimes = []; % Store reaction times for correct responses
 
-global spacePressed
-spacePressed = false; % Track space key press state
+spacePressed = false; % track whether the space key is pressed
 
 % Set key press function
 set(fig, 'KeyPressFcn', @keyPressCallback)
 
 % Key press callback function
 function keyPressCallback(~, event)
-global spacePressed
+global spacePressed % make the spacePressed variable exist outside of this loop
     if strcmp(event.Key, 'space')
         spacePressed = true;
     end
 end
 
-for i = 1:numTrials
-    spacePressed = false; % Reset for each trial
+% Loop the task numTrials times 
+for i = 1:numTrials 
+    spacePressed = false;
 
-    % Draw fixation cross (always visible)
+    % Draw a black fixation cross in the center of the screen
     cla; % Clear previous drawings
     plot([0 0], [-0.007 0.007], 'k', 'LineWidth', 2); % Vertical line
     plot([-0.007 0.007], [0 0], 'k', 'LineWidth', 2); % Horizontal line
-    xlim([-0.2 0.2]); ylim([-0.2 0.2]);
+    xlim([-0.2 0.2]); ylim([-0.2 0.2]); 
 
     % Keep fixation cross for a random time (2-5 sec)
     randomInterval = 2 + (5-2) * rand; % Random number between 2 and 5
-    startTime = tic;
+    startTime = tic; % start timer function
+        % if space is pressed while cross is on screen, count a failure
         while toc(startTime) < randomInterval
             pause(0.01);
             if spacePressed
@@ -74,16 +76,16 @@ for i = 1:numTrials
             end
         end
 
-    % 2️⃣ Show red circle ON TOP of the fixation cross
+    % draw red circle on top of the fixation cross
     rectangle('Position', [-0.01, -0.01, 0.02, 0.02], 'Curvature', [1, 1], 'FaceColor', 'r', 'EdgeColor', 'r');
     xlim([-0.1 0.1]); ylim([-0.1 0.1]);
 
-    % Start reaction timer
-    circleStartTime = tic;
+    % Start timer to calculate reaction time
+    circleStartTime = tic; % timer starts
     spacePressed = false; % Reset spacePressed
 
-    % Wait for space bar press or timeout
-    while toc(circleStartTime) < 0.4
+    % Wait for space bar press or until the circle disappears
+    while toc(circleStartTime) < 0.4 % circle remains on screen for 40 ms
         pause(0.01); % Small pause to check for key press
         if spacePressed
             reactionTime = toc(circleStartTime) * 1000;
@@ -110,7 +112,7 @@ end
         fid = fopen(filename, 'a'); % Append mode
     else
         fid = fopen(filename, 'w'); % Create new file
-        fprintf(fid, 'ParticipantID, Successes, Failures, ReactionTimes\n'); % Write header
+        fprintf(fid, 'Participant_ID, Successes, Failures, ReactionTimes\n'); % Write header
     end
     fileID = fopen(csvFileName, 'a'); % Open file for appending
     fprintf(fileID, '%s,%d,%d,%s\n', participantID{1}, successes, failures, mat2str(mean(reactionTimes)));

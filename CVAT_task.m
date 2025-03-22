@@ -67,7 +67,7 @@ for i = 1:numTrials
     % Keep fixation cross for a random time (2-5 sec)
     randomInterval = 2 + (5-2) * rand; % Random number between 2 and 5
     startTime = tic; % start timer function
-        % if space is pressed while cross is on screen, count a failure
+        % if space pressed while cross is on screen, count a failure
         while toc(startTime) < randomInterval
             pause(0.01);
             if spacePressed
@@ -80,13 +80,15 @@ for i = 1:numTrials
     rectangle('Position', [-0.01, -0.01, 0.02, 0.02], 'Curvature', [1, 1], 'FaceColor', 'r', 'EdgeColor', 'r');
     xlim([-0.1 0.1]); ylim([-0.1 0.1]);
 
-    % Start timer to calculate 
-    circleStartTime = tic;
+    % Start timer to calculate reaction time
+    circleStartTime = tic; % timer starts
     spacePressed = false; % Reset spacePressed
 
-    % Wait for space bar press or timeout
-    while toc(circleStartTime) < 0.4
+    % Wait for space bar press or until the circle disappears
+    while toc(circleStartTime) < 0.4 % circle remains on screen for 400 ms
         pause(0.01); % Small pause to check for key press
+        % if space pressed while circle on screen, count success and
+        % reaction time
         if spacePressed
             reactionTime = toc(circleStartTime) * 1000;
             successes = successes + 1;
@@ -96,9 +98,9 @@ for i = 1:numTrials
         end
     end
 
-    pause(0.4 - toc(circleStartTime)); % Ensure the red circle is on for 0.5 sec total
+    pause(0.4 - toc(circleStartTime)); % Ensure the red circle is on for 400 ms total
 
-    % 3️⃣ Remove the red circle (but keep the cross)
+    % remove red circle but keep the cross
     cla; % Clear figure again
     plot([0 0], [-0.007 0.007], 'k', 'LineWidth', 2); % Vertical line
     plot([-0.007 0.007], [0 0], 'k', 'LineWidth', 2); % Horizontal line
@@ -107,37 +109,38 @@ for i = 1:numTrials
 end
 
 % Save data to the CSV file after the task
-    csvFileName = 'CVAT_data.csv';
+    csvFileName = 'CVAT_data.csv'; % name the data file
     if exist(filename, 'file') == 2
-        fid = fopen(filename, 'a'); % Append mode
+        fid = fopen(filename, 'a'); % Append data to the file if it exists
     else
-        fid = fopen(filename, 'w'); % Create new file
-        fprintf(fid, 'Participant_ID, Successes, Failures, ReactionTimes\n'); % Write header
+        fid = fopen(filename, 'w'); % Create new file if it doesn't exist
+        fprintf(fid, 'Participant_ID, Successes, Failures, ReactionTimes\n'); % column names
     end
     fileID = fopen(csvFileName, 'a'); % Open file for appending
     fprintf(fileID, '%s,%d,%d,%s\n', participantID{1}, successes, failures, mat2str(mean(reactionTimes)));
     fclose(fileID);
 
 pause(1);
-close(fig); 
+close(fig); % close the task screen
 
-% Show "Thank You" Message in a New Figure
+% open a new screen with a thank you message
 fig2 = figure('Color', 'w', 'MenuBar', 'none', 'ToolBar', 'none', ...
     'NumberTitle', 'off', 'Name', 'End of Experiment', 'Position', [300, 300, 1500, 1500]);
 
+% display thank you message
 uicontrol('Style', 'text', 'String', ...
     ['Thank you for participating in this experiment!' ...
     ' Press SPACE to close this window.'], ...
     'FontSize', 20, 'HorizontalAlignment', 'center', ...
     'BackgroundColor', 'w', 'Units', 'normalized', 'Position', [0.1 0.3 0.8 0.4]);
 
-% Wait for SPACE key press
+% Wait for space key to be pressed and close the screen
 waitforbuttonpress;
 while ~strcmp(get(fig2, 'CurrentCharacter'), ' ')
     waitforbuttonpress;
 end
 
-close(fig2);
+close(fig2); % close the screen
 
 
 
